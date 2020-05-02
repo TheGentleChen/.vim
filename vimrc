@@ -14,65 +14,97 @@ if empty(glob('~/.vim/autoload/plug.vim'))
 endif
 
 set nocompatible
-filetype on
-filetype indent on
-filetype plugin on
 filetype plugin indent on
-set encoding=utf-8
-
-let mapleader=" "
 syntax enable
 syntax on
+
+set encoding=utf-8
 set title
 set autoread
-
 set number
 set relativenumber
 set cursorline
 set wrap
 set showcmd
+set ruler
 set wildmenu
-
+set history=100
+set ttimeout
+set ttimeoutlen=0
 set pastetoggle=<F10>
-
 set hlsearch
 set incsearch
 exec "nohlsearch"
 set ignorecase
 set smartcase
-
-set ttimeoutlen=0
-
-" Open the vimrc file anytime
-map <LEADER>rc :e ~/.vim/vimrc<CR>
-
-let &t_ut=''
-" set Vim-specific sequences for RGB colors
-let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
-let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
-
+set nolangremap
+set whichwrap=b,s
 set expandtab
 set tabstop=4
 set shiftwidth=4
 set softtabstop=4
 set list
 set listchars=tab:▸\ ,trail:▫
-set scrolloff=5
+set scrolloff=6
 set tw=0
 set indentexpr=
 set backspace=indent,eol,start
 set foldmethod=indent
 set foldlevel=99
+set laststatus=2
+set autochdir
+
+" file backup
+if has("vms")
+          set nobackup
+        else
+          set backup
+          set backupext=.bak
+          if has('persistent_undo')
+            set undofile
+          endif
+        endif
+
 let &t_SI = "\<Esc>]50;CursorShape=1\x7"
 let &t_SR = "\<Esc>]50;CursorShape=2\x7"
 let &t_EI = "\<Esc>]50;CursorShape=0\x7"
-set laststatus=2
-set autochdir
-au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
+let &t_ut=''
+" set Vim-specific sequences for RGB colors
+let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
+let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
 
+autocmd BufReadPost * if line("'\"") >= 1 && line("'\"") <= line("$") && &ft !~# 'commit'
+                  \ |   exe "normal! g`\""
+                  \ | endif
+
+command DiffOrig vert new | set bt=nofile | r ++edit # | 0d_ | diffthis
+                  \ | wincmd p | diffthis
+
+let mapleader=" "
+" Open the vimrc file anytime
+map <LEADER>rc :edit $MYVIMRC<CR>
 map <LEADER><CR> :nohlsearch<CR>
+map <LEADER>l <C-w>l
+map <LEADER>i <C-w>k
+map <LEADER>j <C-w>h
+map <LEADER>k <C-w>j
+map <LEADER>L <C-w>L
+map <LEADER>I <C-w>K
+map <LEADER>J <C-w>H
+map <LEADER>K <C-w>J
+map <LEADER>bn :wnext<CR>
+map <LEADER>bp :wprevious<CR>
+map <LEADER>bb <C-^>
+map <LEADER>bd :bd<CR>
+map <C-j> 0
+map <C-l> $
+map <C-q> :qall<CR>
+map <C-w> :wall<CR>
+
 noremap - Nzz
 noremap = nzz
+noremap > >>
+noremap < <<
 noremap m i
 noremap h m
 noremap M I
@@ -83,8 +115,9 @@ noremap K 5j
 noremap i k
 noremap I 5k
 noremap L 5l
-noremap <C-j> 0
-noremap <C-l> $
+nnoremap Y "*yy
+
+vnoremap Y "*y
 
 map S :w<CR>
 map s <nop>
@@ -96,26 +129,17 @@ map sj :set nosplitright<CR>:vsplit<CR>
 map si :set nosplitbelow<CR>:split<CR>
 map sk :set splitbelow<CR>:split<CR>
 
-map <LEADER>l <C-w>l
-map <LEADER>i <C-w>k
-map <LEADER>j <C-w>h
-map <LEADER>k <C-w>j
-
-map <up> :res +5<CR>
-map <down> :res -5<CR>
+map <up> :resize +5<CR>
+map <down> :resize -5<CR>
 map <left> :vertical resize+5<CR>
 map <right> :vertical resize-5<CR>
 
-map te :tabe<CR>
-map tk :-tabnext<CR>
-map ti :+tabnext<CR>
+map te :tabedit<CR>
+map tj :-tabnext<CR>
+map tl :+tabnext<CR>
 
 map sv <C-w>t<C-w>H
 map sh <C-w>t<C-w>K
-
-nmap <LEADER>bn :bN<CR>
-nmap <LEADER>bp :bp<CR>
-nmap <LEADER>bd :bd<CR>
 
 call plug#begin('~/.vim/plugged')
 
