@@ -3,20 +3,30 @@
 " == \ \ / / | '_ ` _ \| '__/ __|
 " ==  \ V /| | | | | | | | | (__
 " ==   \_/ |_|_| |_| |_|_|  \___|
-"
 " ==
-" - Auto load for the first time uses
-" ==
+
+" Auto load plugs for the first time uses
 if empty(glob('~/.vim/autoload/plug.vim'))
   silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
     \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
   autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
 endif
 
+" file path of swap, backup, undo files
+if !isdirectory($HOME.'/.cache/vim')
+    call mkdir($HOME.'/.cache/vim')
+endif
+
+" nocompatible mode
 set nocompatible
+" open filetype, plugin, indent
 filetype plugin indent on
-syntax enable
+" open syntax
 syntax on
+
+exec "nohlsearch"
+" for man, just type ':Map echo' for test
+exec "runtime! ftplugin/man.vim"
 
 set encoding=utf-8
 set title
@@ -29,15 +39,17 @@ set showcmd
 set ruler
 set wildmenu
 set history=100
+" for map timeout
+set timeout
+set timeoutlen=1500
+" for keycode timeout
 set ttimeout
-set ttimeoutlen=0
+set ttimeoutlen=10
 set pastetoggle=<F10>
 set hlsearch
 set incsearch
-exec "nohlsearch"
 set ignorecase
 set smartcase
-set nolangremap
 set whichwrap=b,s
 set expandtab
 set tabstop=4
@@ -46,68 +58,113 @@ set softtabstop=4
 set list
 set listchars=tab:▸\ ,trail:▫
 set scrolloff=6
-set tw=0
-set indentexpr=
 set backspace=indent,eol,start
 set foldmethod=indent
 set foldlevel=99
+" disable textwidth auto wrap
+set formatoptions-=tc
 set laststatus=2
+" set working directory to the current file
 set autochdir
-
+set nolangremap
+set textwidth=0
+set indentexpr=
+set ttyfast
+set lazyredraw
+set virtualedit=block
+" swap file
+set directory=$HOME/.cache/vim/swap
+set updatecount=100
 " file backup
-if has("vms")
-          set nobackup
-        else
-          set backup
-          set backupext=.bak
-          if has('persistent_undo')
-            set undofile
-          endif
-        endif
+set backup
+set backupext=.bak
+set backupdir=$HOME/.cache/vim/backup
+" undo file
+set undofile
+set undodir=$HOME/.cache/vim/undo
 
+" cursor shape in i mode
 let &t_SI = "\<Esc>]50;CursorShape=1\x7"
+" cursor shape in r mode
 let &t_SR = "\<Esc>]50;CursorShape=2\x7"
+" cursor shape in normal mode
 let &t_EI = "\<Esc>]50;CursorShape=0\x7"
-let &t_ut=''
+" let vim with terminal be better
+let &t_ut = ''
 " set Vim-specific sequences for RGB colors
 let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
 let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
 
+" go back the last line where you quit vim
 autocmd BufReadPost * if line("'\"") >= 1 && line("'\"") <= line("$") && &ft !~# 'commit'
-                  \ |   exe "normal! g`\""
-                  \ | endif
+                  \ |   exe "normal! g`\"" | endif
 
-command DiffOrig vert new | set bt=nofile | r ++edit # | 0d_ | diffthis
-                  \ | wincmd p | diffthis
+" diff current file with backup file
+command DiffOrig vert new | set bt=nofile | r ++edit # | 0d_ | diffthis | wincmd p | diffthis
 
-let mapleader=" "
-" Open the vimrc file anytime
-map <LEADER>rc :edit $MYVIMRC<CR>
-map <LEADER><CR> :nohlsearch<CR>
-map <LEADER>l <C-w>l
-map <LEADER>i <C-w>k
-map <LEADER>j <C-w>h
-map <LEADER>k <C-w>j
-map <LEADER>L <C-w>L
-map <LEADER>I <C-w>K
-map <LEADER>J <C-w>H
-map <LEADER>K <C-w>J
-map <LEADER>bn :wnext<CR>
-map <LEADER>bp :wprevious<CR>
-map <LEADER>bb <C-^>
-map <LEADER>bd :bd<CR>
-map <C-j> 0
-map <C-l> $
-map <C-q> :qall<CR>
-map <C-w> :wall<CR>
+" leader map
+let g:mapleader=" "
+" Open the vimrc file
+noremap <LEADER>rc :edit $MYVIMRC<CR>
+" shut dowm the highlight of last search
+noremap <LEADER><CR> :nohlsearch<CR>
+" move cursor to other window
+noremap <LEADER>l <C-w>l
+noremap <LEADER>i <C-w>k
+noremap <LEADER>j <C-w>h
+noremap <LEADER>k <C-w>j
+" swith the position of current window
+noremap <LEADER>L <C-w>L
+noremap <LEADER>I <C-w>K
+noremap <LEADER>J <C-w>H
+noremap <LEADER>K <C-w>J
+" indent fold
+noremap <LEADER>a za
+" smart screen refresh
+nnoremap <LEADER>c :nohlsearch<cr>:diffupdate<cr>:syntax sync fromstart<cr><c-l>
+noremap <LEADER>s :%s//g<left><left>
+" switch upper or lower
+noremap <LEADER>u ~h
+" open a terminal
+noremap <LEADER>t :set splitbelow<CR>:term<CR>
+" cute font
+noremap <LEADER>f :r !figlet 
+" go to next buffer
+noremap <LEADER>bn :bnext<CR>
+" go to previous buffer
+noremap <LEADER>bp :bprevious<CR>
+" go to the buffer that you view just before
+noremap <LEADER>bb <C-^>
+" delete current buffer
+noremap <LEADER>bd :bdelete<CR>
+" move current line up
+nnoremap <C-i> :<c-u>execute 'move -1-'. v:count1<cr>
+" move current line down
+nnoremap <C-k> :<c-u>execute 'move +'. v:count1<cr>
+" move cusor to head of current line
+nnoremap <C-j> 0
+" move cusor to end of current line
+nnoremap <C-l> $
+" quit all buffers
+nnoremap <C-q> :qall<CR>
+" save all buffers
+nnoremap <C-w> :wall<CR>
+nnoremap <C-u> <C-i>
+noremap <C-g> :terminal lazygit<CR>
 
-noremap - Nzz
-noremap = nzz
-noremap > >>
-noremap < <<
+" go next or previous searched text and keep in middle of screen
+nnoremap - Nzz
+nnoremap = nzz
+" change indent
+nnoremap < <<
+nnoremap > >>
+" go into insert mode
 noremap m i
-noremap h m
 noremap M I
+" mark
+noremap h m
+noremap H :marks<CR>
+" move
 noremap j h
 noremap J 5h
 noremap k j
@@ -115,31 +172,82 @@ noremap K 5j
 noremap i k
 noremap I 5k
 noremap L 5l
-nnoremap Y "*yy
+" use sys-clipboard in normal mode
+nnoremap Y "+yy
+nnoremap <C-p> "+p
 
-vnoremap Y "*y
+" Compile function
+noremap <C-r> :call CompileRun()<CR>
+func! CompileRun()
+	exec "w"
+	if &filetype == 'c'
+		exec "!gcc % -o %<"
+		exec "!./%<"
+	elseif &filetype == 'cpp'
+		exec "!g++ -std=c++11 % -Wall -o %<"
+		exec "!./%<"
+	elseif &filetype == 'java'
+		exec "!javac %"
+		exec "!java %<"
+	elseif &filetype == 'sh'
+		:!bash %
+	elseif &filetype == 'python'
+		exec "!python3 %"
+	elseif &filetype == 'html'
+		silent! exec "!".g:mkdp_browser." % &"
+	elseif &filetype == 'markdown'
+		exec "MarkdownPreview"
+	endif
+endfunc
 
-map S :w<CR>
-map s <nop>
-map Q :q<CR>
-map R :source $MYVIMRC<CR>
+" re-select view block after indent in v mode
+xnoremap < <gv
+xnoremap > >gv
+" go the end of the current line but ignore the return char
+xnoremap <C-l> g_
+" use sys-clipboard in v mode
+xnoremap Y "+y
+xnoremap <C-p> "+p
 
-map sl :set splitright<CR>:vsplit<CR>
-map sj :set nosplitright<CR>:vsplit<CR>
-map si :set nosplitbelow<CR>:split<CR>
-map sk :set splitbelow<CR>:split<CR>
+" command mode movement
+cnoremap <C-a> <Home>
+cnoremap <C-e> <End>
+cnoremap <C-j> <Left>
+cnoremap <C-l> <Right>
 
-map <up> :resize +5<CR>
-map <down> :resize -5<CR>
-map <left> :vertical resize+5<CR>
-map <right> :vertical resize-5<CR>
 
-map te :tabedit<CR>
-map tj :-tabnext<CR>
-map tl :+tabnext<CR>
+" save
+noremap S :w<CR>
+noremap s <nop>
+" quit
+nnoremap Q :q<CR>
+" refresh my vimrc
+noremap R :source $MYVIMRC<CR>
 
-map sv <C-w>t<C-w>H
-map sh <C-w>t<C-w>K
+" split windows
+noremap sl :set splitright<CR>:vsplit<CR>
+noremap sj :set nosplitright<CR>:vsplit<CR>
+noremap si :set nosplitbelow<CR>:split<CR>
+noremap sk :set splitbelow<CR>:split<CR>
+
+" alter size of the current window
+noremap <up> :resize +5<CR>
+noremap <down> :resize -5<CR>
+noremap <left> :vertical resize+5<CR>
+noremap <right> :vertical resize-5<CR>
+
+" tab operation
+noremap te :tabedit<CR>
+noremap tj :-tabnext<CR>
+noremap tl :+tabnext<CR>
+noremap tmn :-tabmove<CR>
+noremap tmi :+tabmove<CR>
+" alter direction of the current window
+noremap sv <C-w>t<C-w>H
+noremap sh <C-w>t<C-w>K
+" rotate screens
+noremap srh <C-w>b<C-w>K
+noremap srv <C-w>b<C-w>H
 
 call plug#begin('~/.vim/plugged')
 
@@ -188,7 +296,7 @@ let g:rainbow_active = 1
 let g:NERDSpaceDelims = 1
 
 " nerdtree
-map <C-n> :NERDTreeToggle<CR>
+nnoremap <C-n> :NERDTreeToggle<CR>
 
 " nerdtree git
 let g:NERDTreeIndicatorMapCustom = {
