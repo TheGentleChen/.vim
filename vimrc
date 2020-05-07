@@ -1,10 +1,16 @@
-" ==        _
-" == __   _(_)_ __ ___  _ __ ___
-" == \ \ / / | '_ ` _ \| '__/ __|
-" ==  \ V /| | | | | | | | | (__
-" ==   \_/ |_|_| |_| |_|_|  \___|
-" ==
+        _
+ __   _(_)_ __ ___  _ __ ___
+ \ \ / / | '_ ` _ \| '__/ __|
+  \ V /| | | | | | | | | (__
+   \_/ |_|_| |_| |_|_|  \___|
 
+
+" ==     __  ____   ____     _____ __  __ ____   ____ 
+" ==    |  \/  \ \ / /\ \   / /_ _|  \/  |  _ \ / ___|
+" ==    | |\/| |\ V /  \ \ / / | || |\/| | |_) | |    
+" ==    | |  | | | |    \ V /  | || |  | |  _ <| |___ 
+" ==    |_|  |_| |_|     \_/  |___|_|  |_|_| \_\\____|
+" ==
 " Auto load plugs for the first time uses
 if empty(glob('~/.vim/autoload/plug.vim'))
   silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
@@ -137,20 +143,6 @@ noremap <LEADER>bp :bprevious<CR>
 noremap <LEADER>bb <C-^>
 " delete current buffer
 noremap <LEADER>bd :bdelete<CR>
-" move current line up
-nnoremap <C-i> :<c-u>execute 'move -1-'. v:count1<cr>
-" move current line down
-nnoremap <C-k> :<c-u>execute 'move +'. v:count1<cr>
-" move cusor to head of current line
-nnoremap <C-j> 0
-" move cusor to end of current line
-nnoremap <C-l> $
-" quit all buffers
-nnoremap <C-q> :qall<CR>
-" save all buffers
-nnoremap <C-w> :wall<CR>
-nnoremap <C-u> <C-i>
-noremap <C-g> :terminal lazygit<CR>
 
 " go next or previous searched text and keep in middle of screen
 nnoremap - Nzz
@@ -172,41 +164,31 @@ noremap K 5j
 noremap i k
 noremap I 5k
 noremap L 5l
+" s for substitute
+nnoremap s r
+
+" move current line up
+noremap <C-i> :<c-u>execute 'move -1-'. v:count1<cr>
+" move current line down
+noremap <C-k> :<c-u>execute 'move +'. v:count1<cr>
+" move cusor to head of current line
+noremap <C-j> 0
+" move cusor to end of current line
+noremap <C-l> $
+" quit all buffers
+noremap <C-q> :qall<CR>
+" save all buffers
+noremap <C-w> :wall<CR>
+noremap <C-u> <C-i>
+noremap <C-g> :terminal lazygit<CR>
 " use sys-clipboard in normal mode
-nnoremap Y "+yy
-nnoremap <C-p> "+p
+nnoremap <C-y> "+yy
+nnoremap <C-p> o<Esc>"+p
 
-" Compile function
-noremap <C-r> :call CompileRun()<CR>
-func! CompileRun()
-	exec "w"
-	if &filetype == 'c'
-		exec "!gcc % -o %<"
-		exec "!./%<"
-	elseif &filetype == 'cpp'
-		exec "!g++ -std=c++11 % -Wall -o %<"
-		exec "!./%<"
-	elseif &filetype == 'java'
-		exec "!javac %"
-		exec "!java %<"
-	elseif &filetype == 'sh'
-		:!bash %
-	elseif &filetype == 'python'
-		exec "!python3 %"
-	elseif &filetype == 'html'
-		silent! exec "!".g:mkdp_browser." % &"
-	elseif &filetype == 'markdown'
-		exec "MarkdownPreview"
-	endif
-endfunc
-
-" re-select view block after indent in v mode
-xnoremap < <gv
-xnoremap > >gv
 " go the end of the current line but ignore the return char
 xnoremap <C-l> g_
 " use sys-clipboard in v mode
-xnoremap Y "+y
+xnoremap <C-y> "+y
 xnoremap <C-p> "+p
 
 " command mode movement
@@ -215,7 +197,9 @@ cnoremap <C-e> <End>
 cnoremap <C-j> <Left>
 cnoremap <C-l> <Right>
 
-
+" re-select view block after indent in v mode
+xnoremap < <gv
+xnoremap > >gv
 " save
 noremap S :w<CR>
 noremap s <nop>
@@ -249,6 +233,37 @@ noremap sh <C-w>t<C-w>K
 noremap srh <C-w>b<C-w>K
 noremap srv <C-w>b<C-w>H
 
+noremap r :call CompileRun()<CR>
+" Compile function
+func! CompileRun()
+	exec "w"
+	if &filetype == 'c'
+        set splitbelow
+		exec "!gcc % -o %<"
+		exec "terminal ./%<"
+        exec "resize -10"
+	elseif &filetype == 'cpp'
+        set splitbelow
+		exec "!g++ -std=c++11 % -Wall -o %<"
+        exec "terminal ./%<"
+        exec "resize -10"
+	elseif &filetype == 'java'
+        set splitbelow
+		exec "!javac %"
+		exec "!java %<"
+	elseif &filetype == 'sh'
+		:!bash %
+	elseif &filetype == 'python'
+        set splitbelow
+		exec "terminal python3 %"
+        exec "resize -10"
+	elseif &filetype == 'html'
+		silent! exec "!".g:mkdp_browser." % &"
+	elseif &filetype == 'markdown'
+		exec "MarkdownPreview"
+	endif
+endfunc
+
 call plug#begin('~/.vim/plugged')
 
 Plug 'connorholyday/vim-snazzy'
@@ -261,6 +276,7 @@ Plug 'Xuyuanp/nerdtree-git-plugin'
 Plug 'preservim/nerdcommenter'
 Plug 'jiangmiao/auto-pairs'
 Plug 'ryanoasis/vim-devicons'
+Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() } }
 
 call plug#end()
 
@@ -311,3 +327,29 @@ let g:NERDTreeIndicatorMapCustom = {
     \ 'Ignored'   : '☒',
     \ "Unknown"   : "?"
     \ }
+
+" markdown
+let g:mkdp_auto_start = 0
+let g:mkdp_auto_close = 1
+let g:mkdp_refresh_slow = 0
+let g:mkdp_command_for_global = 0
+let g:mkdp_open_to_the_world = 0
+let g:mkdp_open_ip = ''
+let g:mkdp_browser = ''
+let g:mkdp_echo_preview_url = 0
+let g:mkdp_browserfunc = ''
+let g:mkdp_preview_options = {
+    \ 'mkit': {},
+    \ 'katex': {},
+    \ 'uml': {},
+    \ 'maid': {},
+    \ 'disable_sync_scroll': 0,
+    \ 'sync_scroll_type': 'middle',
+    \ 'hide_yaml_meta': 1,
+    \ 'sequence_diagrams': {},
+    \ 'flowchart_diagrams': {}
+    \ }
+let g:mkdp_markdown_css = ''
+let g:mkdp_highlight_css = ''
+let g:mkdp_port = ''
+let g:mkdp_page_title = '「${name}」'
