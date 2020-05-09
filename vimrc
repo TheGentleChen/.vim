@@ -1,16 +1,10 @@
-        _
- __   _(_)_ __ ___  _ __ ___
- \ \ / / | '_ ` _ \| '__/ __|
-  \ V /| | | | | | | | | (__
-   \_/ |_|_| |_| |_|_|  \___|
-
-
-" ==     __  ____   ____     _____ __  __ ____   ____ 
+" ==     __  ____   ____     _____ __  __ ____   ____
 " ==    |  \/  \ \ / /\ \   / /_ _|  \/  |  _ \ / ___|
-" ==    | |\/| |\ V /  \ \ / / | || |\/| | |_) | |    
-" ==    | |  | | | |    \ V /  | || |  | |  _ <| |___ 
+" ==    | |\/| |\ V /  \ \ / / | || |\/| | |_) | |
+" ==    | |  | | | |    \ V /  | || |  | |  _ <| |___
 " ==    |_|  |_| |_|     \_/  |___|_|  |_|_| \_\\____|
 " ==
+" Originated by Rainbow Chen
 " Auto load plugs for the first time uses
 if empty(glob('~/.vim/autoload/plug.vim'))
   silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
@@ -78,6 +72,8 @@ set indentexpr=
 set ttyfast
 set lazyredraw
 set virtualedit=block
+set completeopt-=preview,menuone
+set completeopt+=menu
 " swap file
 set directory=$HOME/.cache/vim/swap
 set updatecount=100
@@ -110,6 +106,7 @@ command DiffOrig vert new | set bt=nofile | r ++edit # | 0d_ | diffthis | wincmd
 
 " leader map
 let g:mapleader=" "
+noremap <LEADER><LEADER> f<lca<
 " Open the vimrc file
 noremap <LEADER>rc :edit $MYVIMRC<CR>
 " shut dowm the highlight of last search
@@ -165,7 +162,7 @@ noremap i k
 noremap I 5k
 noremap L 5l
 " s for substitute
-nnoremap s r
+nnoremap ss r
 
 " move current line up
 noremap <C-i> :<c-u>execute 'move -1-'. v:count1<cr>
@@ -257,6 +254,10 @@ func! CompileRun()
         set splitbelow
 		exec "terminal python3 %"
         exec "resize -10"
+    elseif &filetype == 'tcl'
+        set splitbelow
+        exec "terminal ns %"
+        exec "resize -10"
 	elseif &filetype == 'html'
 		silent! exec "!".g:mkdp_browser." % &"
 	elseif &filetype == 'markdown'
@@ -268,15 +269,15 @@ call plug#begin('~/.vim/plugged')
 
 Plug 'connorholyday/vim-snazzy'
 Plug 'vim-airline/vim-airline'
-Plug 'ycm-core/YouCompleteMe'
+Plug 'ycm-core/YouCompleteMe', { 'do': './install.py --clangd-completer' }
 Plug 'tpope/vim-surround'
 Plug 'luochen1990/rainbow'
-Plug 'preservim/nerdtree'
+Plug 'preservim/nerdtree', { 'on': 'NERDTreeToggle' }
 Plug 'Xuyuanp/nerdtree-git-plugin'
 Plug 'preservim/nerdcommenter'
 Plug 'jiangmiao/auto-pairs'
 Plug 'ryanoasis/vim-devicons'
-Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() } }
+Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }, 'for': 'markdown' }
 
 call plug#end()
 
@@ -291,19 +292,24 @@ if !exists('g:airline_symbols')
 endif
 
 " ycm
-let g:ycm_key_list_select_completion = ['<TAB>', '<Down>']
+let g:ycm_key_list_select_completion = ['<TAB>']
+let g:ycm_key_list_previous_completion = ['<S-TAB>']
 let g:ycm_min_num_of_chars_for_completion = 1
+let g:ycm_autoclose_preview_window_after_insertion = 1
+let g:ycm_autoclose_preview_window_after_completion = 1
+let g:ycm_complete_in_comments = 1
+let g:ycm_goto_buffer_command = 'split-or-existing-window'
+let g:ycm_semantic_triggers =  {
+  \ 'c,cpp,python': ['re!\w{1}'],
+  \ }
 let g:ycm_server_python_interpreter = '/usr/bin/python'
 let g:ycm_clangd_binary_path = '/usr/bin/clangd'
-nnoremap gdf :YcmCompleter GoTODefinition<CR>
-nnoremap gdc :YcmCompleter GoToDeclaration<CR>
-nnoremap gi :YcmCompleter GoToInclude<CR>
-nnoremap gt :YcmCompleter GoTo<CR>
-nnoremap ht :YcmCompleter GetType<CR>
-nnoremap hp :YcmCompleter GetParent<CR>
-nnoremap hd :YcmCompleter GetDoc<CR>
-nnoremap nr :YcmCompleter RefactorRename 
-
+nnoremap gd :YcmCompleter GoTo<CR>
+nnoremap gt :YcmCompleter GetType<CR>
+nnoremap gp :YcmCompleter GetParent<CR>
+nnoremap g; :YcmCompleter GetDoc<CR>
+nnoremap gr :YcmCompleter GoToReferences<CR>
+nnoremap nr :YcmCompleter RefactorRename
 
 " rainbow
 let g:rainbow_active = 1
@@ -353,3 +359,5 @@ let g:mkdp_markdown_css = ''
 let g:mkdp_highlight_css = ''
 let g:mkdp_port = ''
 let g:mkdp_page_title = '「${name}」'
+
+source $HOME/.vim/insert-colemak.vim
