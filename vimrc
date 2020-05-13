@@ -198,18 +198,18 @@ cnoremap <C-l> <Right>
 xnoremap < <gv
 xnoremap > >gv
 " save
-noremap S :w<CR>
-noremap s <nop>
+nnoremap S :w<CR>
+nnoremap s <nop>
 " quit
 nnoremap Q :q<CR>
 " refresh my vimrc
-noremap R :source $MYVIMRC<CR>
+nnoremap R :source $MYVIMRC<CR>
 
 " split windows
-noremap sl :set splitright<CR>:vsplit<CR>
-noremap sj :set nosplitright<CR>:vsplit<CR>
-noremap si :set nosplitbelow<CR>:split<CR>
-noremap sk :set splitbelow<CR>:split<CR>
+nnoremap sl :set splitright<CR>:vsplit<CR>
+nnoremap sj :set nosplitright<CR>:vsplit<CR>
+nnoremap si :set nosplitbelow<CR>:split<CR>
+nnoremap sk :set splitbelow<CR>:split<CR>
 
 " alter size of the current window
 noremap <up> :resize +5<CR>
@@ -218,17 +218,17 @@ noremap <left> :vertical resize+5<CR>
 noremap <right> :vertical resize-5<CR>
 
 " tab operation
-noremap te :tabedit<CR>
-noremap tj :-tabnext<CR>
-noremap tl :+tabnext<CR>
-noremap tmn :-tabmove<CR>
-noremap tmi :+tabmove<CR>
+nnoremap tj :-tabnext<CR>
+nnoremap te :tabedit<CR>
+nnoremap tl :+tabnext<CR>
+nnoremap tmj :-tabmove<CR>
+nnoremap tml :+tabmove<CR>
 " alter direction of the current window
-noremap sv <C-w>t<C-w>H
-noremap sh <C-w>t<C-w>K
+nnoremap sv <C-w>t<C-w>H
+nnoremap sh <C-w>t<C-w>K
 " rotate screens
-noremap srh <C-w>b<C-w>K
-noremap srv <C-w>b<C-w>H
+nnoremap srh <C-w>b<C-w>K
+nnoremap srv <C-w>b<C-w>H
 
 noremap r :call CompileRun()<CR>
 " Compile function
@@ -272,19 +272,23 @@ Plug 'vim-airline/vim-airline'
 Plug 'ycm-core/YouCompleteMe', { 'do': './install.py --clangd-completer' }
 Plug 'tpope/vim-surround'
 Plug 'luochen1990/rainbow'
+Plug 'jiangmiao/auto-pairs'
+Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }, 'for': 'markdown' }
+Plug 'terryma/vim-multiple-cursors'
+Plug 'mhinz/vim-startify'
 Plug 'preservim/nerdtree', { 'on': 'NERDTreeToggle' }
 Plug 'Xuyuanp/nerdtree-git-plugin'
 Plug 'preservim/nerdcommenter'
-Plug 'jiangmiao/auto-pairs'
+Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
 Plug 'ryanoasis/vim-devicons'
-Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }, 'for': 'markdown' }
 
 call plug#end()
 
+" vim-snazzy
 colorscheme snazzy
 
 " airline
-let g:airline_powerline_fonts = 1
+" let g:airline_powerline_fonts = 1
 let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#tabline#buffer_nr_show = 1
 if !exists('g:airline_symbols')
@@ -309,16 +313,35 @@ nnoremap gt :YcmCompleter GetType<CR>
 nnoremap gp :YcmCompleter GetParent<CR>
 nnoremap g; :YcmCompleter GetDoc<CR>
 nnoremap gr :YcmCompleter GoToReferences<CR>
-nnoremap nr :YcmCompleter RefactorRename
+nnoremap gn :YcmCompleter RefactorRename
 
 " rainbow
 let g:rainbow_active = 1
+
+" vim-surround
+nmap <LEADER>" ysmW"
+nmap <LEADER>' ysmW'
+nmap <LEADER>) ysmW)
+nmap <LEADER>{ ysmW{
+nmap <LEADER>[ ysmW[
 
 " nerdcommenter
 let g:NERDSpaceDelims = 1
 
 " nerdtree
-nnoremap <C-n> :NERDTreeToggle<CR>
+augroup nerdtree
+    autocmd FileType nerdtree syntax clear NERDTreeFlags
+augroup END
+let g:NERDTreeMenuDown = "k"
+let g:NERDTreeMenuUp = "i"
+let g:NERDTreeMapOpenSplit = "a"
+let g:NERDTreeMapJumpFirstChild = "I"
+let g:NERDTreeMapJumpLastChild = "K"
+let g:NERDTreeMapJumpNextSibling = "<C-k>"
+let g:NERDTreeMapJumpPrevSibling = "<C-i>"
+let g:NERDTreeMapToggleHidden = "h"
+let g:NERDTreeFileExtensionHighlightFullName = 1
+nnoremap <LEADER>n :NERDTreeToggle<CR>
 
 " nerdtree git
 let g:NERDTreeIndicatorMapCustom = {
@@ -333,6 +356,9 @@ let g:NERDTreeIndicatorMapCustom = {
     \ 'Ignored'   : '☒',
     \ "Unknown"   : "?"
     \ }
+
+" vim-devicons
+let g:webdevicons_conceal_nerdtree_brackets = 0
 
 " markdown
 let g:mkdp_auto_start = 0
@@ -360,4 +386,4 @@ let g:mkdp_highlight_css = ''
 let g:mkdp_port = ''
 let g:mkdp_page_title = '「${name}」'
 
-source $HOME/.vim/insert-colemak.vim
+" source $HOME/.vim/insert-colemak.vim

@@ -33,3 +33,4 @@ inoremap J N
 inoremap K E
 inoremap L I
 inoremap N K
+inoremap E F
