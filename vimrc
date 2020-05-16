@@ -236,12 +236,12 @@ func! CompileRun()
 	exec "w"
 	if &filetype == 'c'
         set splitbelow
-		exec "!gcc % -o %<"
+		exec "!gcc -std=c11 -Wall % -o %<"
 		exec "terminal ./%<"
         exec "resize -10"
 	elseif &filetype == 'cpp'
         set splitbelow
-		exec "!g++ -std=c++11 % -Wall -o %<"
+		exec "!g++ -std=c++2a -Wall % -o %<"
         exec "terminal ./%<"
         exec "resize -10"
 	elseif &filetype == 'java'
@@ -324,6 +324,7 @@ nmap <LEADER>' ysmW'
 nmap <LEADER>) ysmW)
 nmap <LEADER>{ ysmW{
 nmap <LEADER>[ ysmW[
+nmap <LEADER>/ ysmW*ysmW/
 
 " nerdcommenter
 let g:NERDSpaceDelims = 1
