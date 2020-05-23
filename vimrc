@@ -295,6 +295,9 @@ Plug 'ryanoasis/vim-devicons'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'SirVer/ultisnips'
 Plug 'honza/vim-snippets'
+Plug 'francoiscabrol/ranger.vim'
+" nvim need this for ranger.vim
+" Plug 'rbgrouleff/bclose.vim'
 
 call plug#end()
 
@@ -407,6 +410,13 @@ let g:UltiSnipsExpandTrigger="<C-s>"
 let g:UltiSnipsJumpForwardTrigger="<C-l>"
 let g:UltiSnipsJumpBackwardTrigger="<C-j>"
 let g:UltiSnipsEditSplit="horizontal"
+
+" ranger
+noremap <leader>f :RangerNewTab<CR>
+" add this line if you use NERDTree
+let g:NERDTreeHijackNetrw = 0
+" open ranger when vim open a directory
+let g:ranger_replace_netrw = 1
 
 unmap <TAB>
 
