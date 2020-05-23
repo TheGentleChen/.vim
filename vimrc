@@ -62,18 +62,17 @@ set backspace=indent,eol,start
 set foldmethod=indent
 set foldlevel=99
 " disable textwidth auto wrap
-set formatoptions-=tc
+set formatoptions=rq
 set laststatus=2
 " set working directory to the current file
 set autochdir
 set nolangremap
-set textwidth=0
 set indentexpr=
 set ttyfast
 set lazyredraw
 set virtualedit=block
-set completeopt-=preview,menuone
-set completeopt+=menu
+set completeopt=menuone
+set termguicolors
 " swap file
 set directory=$HOME/.cache/vim/swap
 set updatecount=100
@@ -84,7 +83,8 @@ set backupdir=$HOME/.cache/vim/backup
 " undo file
 set undofile
 set undodir=$HOME/.cache/vim/undo
-
+" viminfo
+set viminfo='1000,f1,<500
 " cursor shape in i mode
 let &t_SI = "\<Esc>]50;CursorShape=1\x7"
 " cursor shape in r mode
@@ -106,7 +106,6 @@ command DiffOrig vert new | set bt=nofile | r ++edit # | 0d_ | diffthis | wincmd
 
 " leader map
 let g:mapleader=" "
-noremap <LEADER><LEADER> f<lca<
 " Open the vimrc file
 noremap <LEADER>rc :edit $MYVIMRC<CR>
 " shut dowm the highlight of last search
@@ -125,13 +124,17 @@ noremap <LEADER>K <C-w>J
 noremap <LEADER>a za
 " smart screen refresh
 nnoremap <LEADER>c :nohlsearch<cr>:diffupdate<cr>:syntax sync fromstart<cr><c-l>
-noremap <LEADER>s :%s//g<left><left>
+noremap <LEADER>s :%s///g<left><left>
 " switch upper or lower
 noremap <LEADER>u ~h
 " open a terminal
 noremap <LEADER>t :set splitbelow<CR>:term<CR>
 " cute font
-noremap <LEADER>f :r !figlet 
+noremap <LEADER>f :r !figlet<SPACE>
+" lazygit
+noremap <LEADER>g :terminal lazygit<CR>
+" oldfile
+noremap <LEADER>o :browse oldfile<CR>
 " go to next buffer
 noremap <LEADER>bn :bnext<CR>
 " go to previous buffer
@@ -140,6 +143,12 @@ noremap <LEADER>bp :bprevious<CR>
 noremap <LEADER>bb <C-^>
 " delete current buffer
 noremap <LEADER>bd :bdelete<CR>
+" plus 1 to value in current location
+noremap <LEADER>. <C-a>
+" minus 1 to value in current location
+noremap <LEADER>, <C-x>
+" jump to the next placehold and edit it
+noremap <LEADER><LEADER> <Esc>/<++><CR>:nohlsearch<CR>c4l
 
 " go next or previous searched text and keep in middle of screen
 nnoremap - Nzz
@@ -155,12 +164,12 @@ noremap h m
 noremap H :marks<CR>
 " move
 noremap j h
-noremap J 5h
+noremap J b
 noremap k j
 noremap K 5j
 noremap i k
 noremap I 5k
-noremap L 5l
+noremap L w
 " s for substitute
 nnoremap ss r
 
@@ -173,11 +182,10 @@ noremap <C-j> 0
 " move cusor to end of current line
 noremap <C-l> $
 " quit all buffers
-noremap <C-q> :qall<CR>
+" noremap <C-q> :qall<CR>
 " save all buffers
-noremap <C-w> :wall<CR>
+" noremap <C-w> :wall<CR>
 noremap <C-u> <C-i>
-noremap <C-g> :terminal lazygit<CR>
 " use sys-clipboard in normal mode
 nnoremap <C-y> "+yy
 nnoremap <C-p> o<Esc>"+p
@@ -194,6 +202,9 @@ cnoremap <C-e> <End>
 cnoremap <C-j> <Left>
 cnoremap <C-l> <Right>
 
+" insert mode movement inner current line
+inoremap <C-j> <Esc>I
+inoremap <C-l> <Esc>A
 " re-select view block after indent in v mode
 xnoremap < <gv
 xnoremap > >gv
@@ -223,12 +234,12 @@ nnoremap te :tabedit<CR>
 nnoremap tl :+tabnext<CR>
 nnoremap tmj :-tabmove<CR>
 nnoremap tml :+tabmove<CR>
-" alter direction of the current window
-nnoremap sv <C-w>t<C-w>H
-nnoremap sh <C-w>t<C-w>K
-" rotate screens
-nnoremap srh <C-w>b<C-w>K
-nnoremap srv <C-w>b<C-w>H
+" make current window widest on left or top
+nnoremap sv <C-w>H
+nnoremap sh <C-w>K
+" rotate windows
+nnoremap sr <C-w>r
+nnoremap sR <C-w>R
 
 noremap r :call CompileRun()<CR>
 " Compile function
@@ -281,6 +292,9 @@ Plug 'Xuyuanp/nerdtree-git-plugin'
 Plug 'preservim/nerdcommenter'
 Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
 Plug 'ryanoasis/vim-devicons'
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+Plug 'SirVer/ultisnips'
+Plug 'honza/vim-snippets'
 
 call plug#end()
 
@@ -308,12 +322,13 @@ let g:ycm_semantic_triggers =  {
   \ }
 let g:ycm_server_python_interpreter = '/usr/bin/python'
 let g:ycm_clangd_binary_path = '/usr/bin/clangd'
+let g:ycm_global_ycm_extra_conf = '$HOME/.vim/.ycm_extra_conf.py'
 nnoremap gd :YcmCompleter GoTo<CR>
 nnoremap gt :YcmCompleter GetType<CR>
 nnoremap gp :YcmCompleter GetParent<CR>
 nnoremap g; :YcmCompleter GetDoc<CR>
 nnoremap gr :YcmCompleter GoToReferences<CR>
-nnoremap gn :YcmCompleter RefactorRename
+nnoremap gn :YcmCompleter RefactorRename<SPACE>
 
 " rainbow
 let g:rainbow_active = 1
@@ -324,7 +339,7 @@ nmap <LEADER>' ysmW'
 nmap <LEADER>) ysmW)
 nmap <LEADER>{ ysmW{
 nmap <LEADER>[ ysmW[
-nmap <LEADER>/ ysmW*ysmW/
+nmap <LEADER>/ ysmW*ysmW/f*a<SPACE><ESC>f*m<SPACE><ESC>b
 
 " nerdcommenter
 let g:NERDSpaceDelims = 1
@@ -386,5 +401,13 @@ let g:mkdp_markdown_css = ''
 let g:mkdp_highlight_css = ''
 let g:mkdp_port = ''
 let g:mkdp_page_title = '「${name}」'
+
+" vim-snippet
+let g:UltiSnipsExpandTrigger="<C-s>"
+let g:UltiSnipsJumpForwardTrigger="<C-l>"
+let g:UltiSnipsJumpBackwardTrigger="<C-j>"
+let g:UltiSnipsEditSplit="horizontal"
+
+unmap <TAB>
 
 " source $HOME/.vim/insert-colemak.vim
