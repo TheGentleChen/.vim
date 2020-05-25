@@ -122,19 +122,17 @@ noremap <LEADER>J <C-w>H
 noremap <LEADER>K <C-w>J
 " indent fold
 noremap <LEADER>a za
-" smart screen refresh
-nnoremap <LEADER>c :nohlsearch<cr>:diffupdate<cr>:syntax sync fromstart<cr><c-l>
-noremap <LEADER>s :%s///g<left><left>
+noremap <LEADER>s :%s///g<left><left><left>
 " switch upper or lower
 noremap <LEADER>u ~h
 " open a terminal
 noremap <LEADER>t :set splitbelow<CR>:term<CR>
 " cute font
-noremap <LEADER>f :r !figlet<SPACE>
+noremap <LEADER>fr :r !figlet<SPACE>
 " lazygit
 noremap <LEADER>g :terminal lazygit<CR>
 " oldfile
-noremap <LEADER>o :browse oldfile<CR>
+" noremap <LEADER>o :browse oldfile<CR>
 " go to next buffer
 noremap <LEADER>bn :bnext<CR>
 " go to previous buffer
@@ -293,16 +291,21 @@ Plug 'preservim/nerdcommenter'
 Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
 Plug 'ryanoasis/vim-devicons'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+Plug 'junegunn/fzf.vim'
 Plug 'SirVer/ultisnips'
 Plug 'honza/vim-snippets'
 Plug 'francoiscabrol/ranger.vim'
 " nvim need this for ranger.vim
 " Plug 'rbgrouleff/bclose.vim'
+Plug 'arcticicestudio/nord-vim'
 
 call plug#end()
 
-" vim-snazzy
-colorscheme snazzy
+" vim colorscheme
+colorscheme nord
+let g:nord_italic = 1
+let g:nord_italic_comments = 1
+let g:nord_underline = 1
 
 " airline
 " let g:airline_powerline_fonts = 1
@@ -344,8 +347,22 @@ nmap <LEADER>{ ysmW{
 nmap <LEADER>[ ysmW[
 nmap <LEADER>/ ysmW*ysmW/f*a<SPACE><ESC>f*m<SPACE><ESC>b
 
+" vim-multiple-cursors
+let g:multi_cursor_use_default_mapping=0
+
+" Default mapping
+let g:multi_cursor_start_word_key      = '<C-n>'
+let g:multi_cursor_select_all_word_key = '<A-n>'
+let g:multi_cursor_start_key           = 'g<C-n>'
+let g:multi_cursor_select_all_key      = 'g<A-n>'
+let g:multi_cursor_next_key            = '<C-n>'
+let g:multi_cursor_prev_key            = '<C-p>'
+let g:multi_cursor_skip_key            = '<C-x>'
+let g:multi_cursor_quit_key            = '<ESC>'
+
 " nerdcommenter
 let g:NERDSpaceDelims = 1
+let g:NERDTrimTrailingWhitespace = 1
 
 " nerdtree
 augroup nerdtree
@@ -360,7 +377,7 @@ let g:NERDTreeMapJumpNextSibling = "<C-k>"
 let g:NERDTreeMapJumpPrevSibling = "<C-i>"
 let g:NERDTreeMapToggleHidden = "h"
 let g:NERDTreeFileExtensionHighlightFullName = 1
-nnoremap <LEADER>n :NERDTreeToggle<CR>
+noremap <LEADER>n :NERDTreeToggle<CR>
 
 " nerdtree git
 let g:NERDTreeIndicatorMapCustom = {
@@ -405,7 +422,20 @@ let g:mkdp_highlight_css = ''
 let g:mkdp_port = ''
 let g:mkdp_page_title = '「${name}」'
 
-" vim-snippet
+" vim-fzf
+noremap <LEADER>ff :Files<CR>
+noremap <LEADER>fg :GFiles<CR>
+noremap <LEADER>fb :Buffers<CR>
+noremap <LEADER>fc :Colors<CR>
+noremap <LEADER>fl :Lines<CR>
+noremap <LEADER>ft :Tags<CR>
+noremap <LEADER>fm :Marks<CR>
+noremap <LEADER>fw :Windows<CR>
+noremap <LEADER>fh :History<CR>
+noremap <LEADER>fs :Snippets<CR>
+noremap <LEADER>fM :Maps<CR>
+
+" ultisnips
 let g:UltiSnipsExpandTrigger="<C-s>"
 let g:UltiSnipsJumpForwardTrigger="<C-l>"
 let g:UltiSnipsJumpBackwardTrigger="<C-j>"
