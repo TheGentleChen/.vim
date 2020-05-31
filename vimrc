@@ -4,11 +4,13 @@
 " ==    | |  | | | |    \ V /  | || |  | |  _ <| |___
 " ==    |_|  |_| |_|     \_/  |___|_|  |_|_| \_\\____|
 " ==
-" Originated by Rainbow Chen
+" ==            Originated by Rainbow Chen
+
 " Auto load plugs for the first time uses
 if empty(glob('~/.vim/autoload/plug.vim'))
   silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
     \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+
   autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
 endif
 
@@ -21,12 +23,8 @@ endif
 set nocompatible
 " open filetype, plugin, indent
 filetype plugin indent on
-" open syntax
+" syntax enable
 syntax on
-
-exec "nohlsearch"
-" for man, just type ':Map echo' for test
-exec "runtime! ftplugin/man.vim"
 
 set encoding=utf-8
 set title
@@ -51,18 +49,18 @@ set incsearch
 set ignorecase
 set smartcase
 set whichwrap=b,s
-set expandtab
-set tabstop=4
 set shiftwidth=4
+set tabstop=8
 set softtabstop=4
 set list
 set listchars=tab:▸\ ,trail:▫
 set scrolloff=6
+set cindent
 set backspace=indent,eol,start
 set foldmethod=indent
 set foldlevel=99
 " disable textwidth auto wrap
-set formatoptions=rq
+set formatoptions=q
 set laststatus=2
 " set working directory to the current file
 set autochdir
@@ -93,13 +91,16 @@ let &t_SR = "\<Esc>]50;CursorShape=2\x7"
 let &t_EI = "\<Esc>]50;CursorShape=0\x7"
 " let vim with terminal be better
 let &t_ut = ''
-" set Vim-specific sequences for RGB colors
-let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
-let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
+" set vim-specific sequences for RGB colors
+" let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
+" let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
 
 " go back the last line where you quit vim
 autocmd BufReadPost * if line("'\"") >= 1 && line("'\"") <= line("$") && &ft !~# 'commit'
                   \ |   exe "normal! g`\"" | endif
+" automatically deletes all trailing whitespace and newlines at end of file on save
+autocmd BufWritePre * %s/\s\+$//e
+autocmd BufWritePre * %s/\n\+\%$//e
 
 " diff current file with backup file
 command DiffOrig vert new | set bt=nofile | r ++edit # | 0d_ | diffthis | wincmd p | diffthis
@@ -120,13 +121,12 @@ noremap <LEADER>L <C-w>L
 noremap <LEADER>I <C-w>K
 noremap <LEADER>J <C-w>H
 noremap <LEADER>K <C-w>J
-" indent fold
-noremap <LEADER>a za
+" substitute
 noremap <LEADER>s :%s///g<left><left><left>
 " switch upper or lower
 noremap <LEADER>u ~h
 " open a terminal
-noremap <LEADER>t :set splitbelow<CR>:term<CR>
+noremap <LEADER>T :set splitbelow<CR>:term<CR>
 " cute font
 noremap <LEADER>fr :r !figlet<SPACE>
 " lazygit
@@ -199,6 +199,9 @@ cnoremap <C-a> <Home>
 cnoremap <C-e> <End>
 cnoremap <C-j> <Left>
 cnoremap <C-l> <Right>
+
+" save file as sudo
+cnoremap w!! execute 'silent! write !sudo tee % >/dev/null' <bar> edit!
 
 " insert mode movement inner current line
 inoremap <C-j> <Esc>I
@@ -297,15 +300,22 @@ Plug 'honza/vim-snippets'
 Plug 'francoiscabrol/ranger.vim'
 " nvim need this for ranger.vim
 " Plug 'rbgrouleff/bclose.vim'
+Plug 'dracula/vim', { 'as': 'dracula' }
 Plug 'arcticicestudio/nord-vim'
+Plug 'puremourning/vimspector', {'do': './install_gadget.py --enable-c --enable-python --enable-go'}
+Plug 'mzlogin/vim-markdown-toc'
+Plug 'dhruvasagar/vim-table-mode'
+Plug 'junegunn/vim-easy-align'
+Plug 'Chiel92/vim-autoformat'
+Plug 'liuchengxu/vista.vim'
 
 call plug#end()
 
 " vim colorscheme
-colorscheme nord
-let g:nord_italic = 1
-let g:nord_italic_comments = 1
-let g:nord_underline = 1
+colorscheme dracula
+" let g:nord_italic = 1
+" let g:nord_italic_comments = 1
+" let g:nord_underline = 1
 
 " airline
 " let g:airline_powerline_fonts = 1
@@ -352,8 +362,8 @@ let g:multi_cursor_use_default_mapping=0
 
 " Default mapping
 let g:multi_cursor_start_word_key      = '<C-n>'
-let g:multi_cursor_select_all_word_key = '<A-n>'
-let g:multi_cursor_start_key           = 'g<C-n>'
+let g:multi_cursor_select_all_word_key = 'g<C-n>'
+let g:multi_cursor_start_key           = 'g<A-n>'
 let g:multi_cursor_select_all_key      = 'g<A-n>'
 let g:multi_cursor_next_key            = '<C-n>'
 let g:multi_cursor_prev_key            = '<C-p>'
@@ -437,17 +447,61 @@ noremap <LEADER>fM :Maps<CR>
 
 " ultisnips
 let g:UltiSnipsExpandTrigger="<C-s>"
-let g:UltiSnipsJumpForwardTrigger="<C-l>"
+let g:UltiSnipsJumpForwardTrigger="<C-s>"
 let g:UltiSnipsJumpBackwardTrigger="<C-j>"
+let g:UltiSnipsSnippetDirectories = [$HOME.'/.vim/Ultisnips/', $HOME.'/.vim/plugged/vim-snippets/UltiSnips/']
 let g:UltiSnipsEditSplit="horizontal"
 
 " ranger
-noremap <leader>f :RangerNewTab<CR>
+noremap <LEADER>w :RangerNewTab<CR>
 " add this line if you use NERDTree
 let g:NERDTreeHijackNetrw = 0
 " open ranger when vim open a directory
 let g:ranger_replace_netrw = 1
 
+" vimspector
+let g:vimspector_enable_mappings = 'HUMAN'
+sign define vimspectorBP text=🔴 texthl=Normal
+sign define vimspectorBPDisabled text=🔵 texthl=Normal
+sign define vimspectorPC text=🔶 texthl=SpellBad
+
+" vim-markdown-toc
+let g:vmt_auto_update_on_save = 1
+let g:vmt_dont_insert_fence = 0
+let g:vmt_cycle_list_item_markers = 1
+let g:vmt_include_headings_before = 0
+let g:vmt_fence_text = 'TOC'
+let g:vmt_fence_closing_text = '/TOC'
+
+" vim-table-mode
+noremap <LEADER>tm :TableModeToggle<CR>
+let g:table_mode_relign_map = '<LEADER>tr'
+
+" vim-easy-align
+noremap ga <Plug>(EasyAlign)
+
+" vista
+noremap T :Vista!!<CR>
+noremap <C-t> :Vista finder ctags<CR>
+let g:vista_icon_indent = ["╰─▸ ", "├─▸ "]
+let g:vista_default_executive = 'ctags'
+let g:vista_fzf_preview = ['right:50%']
+let g:vista#renderer#enable_icon = 1
+let g:vista#renderer#icons = {
+\   "function": "\uf794",
+\   "variable": "\uf71b",
+\  }
+let g:vista_executive_for = {
+  \ 'cpp': 'ctags',
+  \ }
+
+" vim-autoformat
+noremap <LEADER>af :Autoformat<CR>
+
 unmap <TAB>
+
+" for man, just type ':Map echo' for test
+exec "runtime! ftplugin/man.vim"
+exec "nohlsearch"
 
 " source $HOME/.vim/insert-colemak.vim
