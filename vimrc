@@ -285,7 +285,7 @@ Plug 'ycm-core/YouCompleteMe', { 'do': './install.py --clangd-completer' }
 Plug 'tpope/vim-surround'
 Plug 'luochen1990/rainbow'
 Plug 'jiangmiao/auto-pairs'
-Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }, 'for': 'markdown' }
+Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }, 'for': ['markdown', 'vim-plug']}
 Plug 'terryma/vim-multiple-cursors'
 Plug 'mhinz/vim-startify'
 Plug 'preservim/nerdtree', { 'on': 'NERDTreeToggle' }
@@ -359,7 +359,6 @@ nmap <LEADER>/ ysmW*ysmW/f*a<SPACE><ESC>f*m<SPACE><ESC>b
 
 " vim-multiple-cursors
 let g:multi_cursor_use_default_mapping=0
-
 " Default mapping
 let g:multi_cursor_start_word_key      = '<C-n>'
 let g:multi_cursor_select_all_word_key = 'g<C-n>'
@@ -446,9 +445,10 @@ noremap <LEADER>fs :Snippets<CR>
 noremap <LEADER>fM :Maps<CR>
 
 " ultisnips
-let g:UltiSnipsExpandTrigger="<C-s>"
-let g:UltiSnipsJumpForwardTrigger="<C-s>"
-let g:UltiSnipsJumpBackwardTrigger="<C-j>"
+let g:UltiSnipsExpandTrigger="<C-d>"
+let g:UltiSnipsJumpForwardTrigger="<C-d>"
+let g:UltiSnipsListSnippets = "<C-w>"
+let g:UltiSnipsJumpBackwardTrigger="<C-a>"
 let g:UltiSnipsSnippetDirectories = [$HOME.'/.vim/Ultisnips/', $HOME.'/.vim/plugged/vim-snippets/UltiSnips/']
 let g:UltiSnipsEditSplit="horizontal"
 
@@ -461,6 +461,17 @@ let g:ranger_replace_netrw = 1
 
 " vimspector
 let g:vimspector_enable_mappings = 'HUMAN'
+nnoremap <F2> :VimspectorReset<CR>
+function! s:read_template_into_buffer(template)
+	" has to be a function to avoid the extra space fzf#run insers otherwise
+	execute '0r ~/.vim/vimspector_json_templation/'.a:template
+endfunction
+command! -bang -nargs=* LoadVimSpectorJsonTemplate call fzf#run({
+			\   'source': 'ls -1 ~/.vim/vimspector_json_templation',
+			\   'down': 20,
+			\   'sink': function('<sid>read_template_into_buffer')
+			\ })
+noremap <leader>vs :tabe .vimspector.json<CR>:LoadVimSpectorJsonTemplate<CR>
 sign define vimspectorBP text=🔴 texthl=Normal
 sign define vimspectorBPDisabled text=🔵 texthl=Normal
 sign define vimspectorPC text=🔶 texthl=SpellBad
