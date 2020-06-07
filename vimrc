@@ -63,6 +63,7 @@ set foldlevel=99
 set formatoptions=q
 set laststatus=2
 " set working directory to the current file
+set updatetime=100
 set autochdir
 set nolangremap
 set indentexpr=
@@ -147,6 +148,9 @@ noremap <LEADER>. <C-a>
 noremap <LEADER>, <C-x>
 " jump to the next placehold and edit it
 noremap <LEADER><LEADER> <Esc>/<++><CR>:nohlsearch<CR>c4l
+
+" search
+noremap // /
 
 " go next or previous searched text and keep in middle of screen
 nnoremap - Nzz
@@ -247,33 +251,33 @@ noremap r :call CompileRun()<CR>
 func! CompileRun()
 	exec "w"
 	if &filetype == 'c'
-        set splitbelow
-		exec "!gcc -std=c11 -Wall % -o %<"
-		exec "terminal ./%<"
-        exec "resize -10"
+	    set splitbelow
+	    exec "!gcc -std=c11 -Wall % -o %<"
+	    exec "terminal ./%<"
+	    exec "resize -10"
 	elseif &filetype == 'cpp'
-        set splitbelow
-		exec "!g++ -std=c++2a -Wall % -o %<"
-        exec "terminal ./%<"
-        exec "resize -10"
+	    set splitbelow
+	    exec "!g++ -std=c++2a -Wall % -o %<"
+	    exec "terminal ./%<"
+	    exec "resize -10"
 	elseif &filetype == 'java'
-        set splitbelow
-		exec "!javac %"
-		exec "!java %<"
-	elseif &filetype == 'sh'
-		:!bash %
+	    set splitbelow
+	    exec "!javac %"
+	    exec "!java %<"
+	    elseif &filetype == 'sh'
+	    :!bash %
 	elseif &filetype == 'python'
-        set splitbelow
-		exec "terminal python3 %"
-        exec "resize -10"
-    elseif &filetype == 'tcl'
-        set splitbelow
-        exec "terminal ns %"
-        exec "resize -10"
+	    set splitbelow
+	    exec "terminal python3 %"
+	    exec "resize -10"
+	elseif &filetype == 'tcl'
+	    set splitbelow
+	    exec "terminal ns %"
+	    exec "resize -10"
 	elseif &filetype == 'html'
-		silent! exec "!".g:mkdp_browser." % &"
+	    silent! exec "!".g:mkdp_browser." % &"
 	elseif &filetype == 'markdown'
-		exec "MarkdownPreview"
+	    exec "MarkdownPreview"
 	endif
 endfunc
 
@@ -308,6 +312,11 @@ Plug 'dhruvasagar/vim-table-mode'
 Plug 'junegunn/vim-easy-align'
 Plug 'Chiel92/vim-autoformat'
 Plug 'liuchengxu/vista.vim'
+Plug 'kshenoy/vim-signature'
+Plug 'easymotion/vim-easymotion'
+Plug 'mg979/vim-xtabline'
+Plug 'junegunn/goyo.vim'
+Plug 'mhinz/vim-signify'
 
 call plug#end()
 
@@ -508,6 +517,83 @@ let g:vista_executive_for = {
 
 " vim-autoformat
 noremap <LEADER>af :Autoformat<CR>
+
+" vim-signature
+let g:SignatureMap = {
+    \ 'Leader'             :  "h",
+    \ 'PlaceNextMark'      :  "h,",
+    \ 'ToggleMarkAtLine'   :  "h.",
+    \ 'PurgeMarksAtLine'   :  "h-",
+    \ 'DeleteMark'         :  "dh",
+    \ 'PurgeMarks'         :  "h<Space>",
+    \ 'PurgeMarkers'       :  "h<BS>",
+    \ 'GotoNextLineAlpha'  :  "']",
+    \ 'GotoPrevLineAlpha'  :  "'[",
+    \ 'GotoNextSpotAlpha'  :  "`]",
+    \ 'GotoPrevSpotAlpha'  :  "`[",
+    \ 'GotoNextLineByPos'  :  "]'",
+    \ 'GotoPrevLineByPos'  :  "['",
+    \ 'GotoNextSpotByPos'  :  "]`",
+    \ 'GotoPrevSpotByPos'  :  "[`",
+    \ 'GotoNextMarker'     :  "]-",
+    \ 'GotoPrevMarker'     :  "[-",
+    \ 'GotoNextMarkerAny'  :  "]=",
+    \ 'GotoPrevMarkerAny'  :  "[=",
+    \ 'ListBufferMarks'    :  "h/",
+    \ 'ListBufferMarkers'  :  "h?"
+    \ }
+
+" vim-easymotion
+" Disable default mappings
+let g:EasyMotion_do_mapping = 0
+let g:EasyMotion_smartcase = 1
+let g:EasyMotion_use_smartsign_us = 1
+" <Leader>f{char} to move to {char}
+vmap /f <Plug>(easymotion-bd-f)
+nmap /f <Plug>(easymotion-overwin-f)
+" s{char}{char} to move to {char}{char}
+nmap /s <Plug>(easymotion-overwin-f2)
+" Move to line
+vmap /l <Plug>(easymotion-bd-jk)
+nmap /l <Plug>(easymotion-overwin-line)
+" Move to word
+vmap  /w <Plug>(easymotion-bd-w)
+nmap /w <Plug>(easymotion-overwin-w)
+
+" xtabline
+let g:xtabline_settings = {}
+let g:xtabline_settings.enable_mappings = 0
+let g:xtabline_settings.enable_persistance = 0
+let g:xtabline_settings.last_open_first = 1
+let g:xtabline_settings.tabline_modes = ['tabs', 'buffers']
+autocmd FileType * :XTabTheme dracula
+let g:xtabline_settings.indicators = {
+  \ 'modified': '[+]',
+  \ 'pinned': '[📌]',
+  \}
+let g:xtabline_settings.icons = {
+  \'pin': '📌',
+  \'star': '★',
+  \'book': '📖',
+  \'lock': '🔒',
+  \'hammer': '🔨',
+  \'tick': '✔',
+  \'cross': '✖',
+  \'warning': '⚠',
+  \'menu': '☰',
+  \'apple': '🍎',
+  \'linux': '🐧',
+  \'windows': '⌘',
+  \'git': '',
+  \'palette': '🎨',
+  \'lens': '🔍',
+  \'flag': '🏁',
+  \}
+
+" Goyo
+nnoremap <LEADER>gy :Goyo<CR>
+let g:goyo_width = '70'
+let g:goyo_height = '80%'
 
 unmap <TAB>
 
