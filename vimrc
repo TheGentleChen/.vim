@@ -72,6 +72,14 @@ set lazyredraw
 set virtualedit=block
 set completeopt=menuone
 set termguicolors
+" shutdown the error bell
+set noerrorbells
+set novisualbell
+set vb t_vb=
+" recommender render 256 colors
+set t_Co=256
+" for devicons around brackets
+set conceallevel=3
 " swap file
 set directory=$HOME/.cache/vim/swap
 set updatecount=100
@@ -296,7 +304,6 @@ Plug 'preservim/nerdtree', { 'on': 'NERDTreeToggle' }
 Plug 'Xuyuanp/nerdtree-git-plugin'
 Plug 'preservim/nerdcommenter'
 Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
-Plug 'ryanoasis/vim-devicons'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 Plug 'SirVer/ultisnips'
@@ -317,6 +324,8 @@ Plug 'easymotion/vim-easymotion'
 Plug 'mg979/vim-xtabline'
 Plug 'junegunn/goyo.vim'
 Plug 'mhinz/vim-signify'
+" keep on last position
+Plug 'ryanoasis/vim-devicons'
 
 call plug#end()
 
@@ -383,9 +392,6 @@ let g:NERDSpaceDelims = 1
 let g:NERDTrimTrailingWhitespace = 1
 
 " nerdtree
-augroup nerdtree
-    autocmd FileType nerdtree syntax clear NERDTreeFlags
-augroup END
 let g:NERDTreeMenuDown = "k"
 let g:NERDTreeMenuUp = "i"
 let g:NERDTreeMapOpenSplit = "a"
@@ -394,7 +400,8 @@ let g:NERDTreeMapJumpLastChild = "K"
 let g:NERDTreeMapJumpNextSibling = "<C-k>"
 let g:NERDTreeMapJumpPrevSibling = "<C-i>"
 let g:NERDTreeMapToggleHidden = "h"
-let g:NERDTreeFileExtensionHighlightFullName = 1
+let g:NERDTreeDirArrowExpandable = '▸'
+let g:NERDTreeDirArrowCollapsible = '▾'
 noremap <LEADER>n :NERDTreeToggle<CR>
 
 " nerdtree git
@@ -412,7 +419,7 @@ let g:NERDTreeIndicatorMapCustom = {
     \ }
 
 " vim-devicons
-let g:webdevicons_conceal_nerdtree_brackets = 0
+let g:webdevicons_conceal_nerdtree_brackets = 1
 
 " markdown
 let g:mkdp_auto_start = 0
@@ -566,7 +573,7 @@ let g:xtabline_settings.enable_mappings = 0
 let g:xtabline_settings.enable_persistance = 0
 let g:xtabline_settings.last_open_first = 1
 let g:xtabline_settings.tabline_modes = ['tabs', 'buffers']
-autocmd FileType * :XTabTheme dracula
+autocmd vimenter * :XTabTheme dracula
 let g:xtabline_settings.indicators = {
   \ 'modified': '[+]',
   \ 'pinned': '[📌]',
