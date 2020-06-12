@@ -72,6 +72,7 @@ set lazyredraw
 set virtualedit=block
 set completeopt=menuone
 set termguicolors
+set noshowmode
 " shutdown the error bell
 set noerrorbells
 set novisualbell
@@ -291,8 +292,8 @@ endfunc
 
 call plug#begin('~/.vim/plugged')
 
-Plug 'connorholyday/vim-snazzy'
 Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
 Plug 'ycm-core/YouCompleteMe', { 'do': './install.py --clangd-completer' }
 Plug 'tpope/vim-surround'
 Plug 'luochen1990/rainbow'
@@ -311,8 +312,6 @@ Plug 'honza/vim-snippets'
 Plug 'francoiscabrol/ranger.vim'
 " nvim need this for ranger.vim
 " Plug 'rbgrouleff/bclose.vim'
-Plug 'dracula/vim', { 'as': 'dracula' }
-Plug 'arcticicestudio/nord-vim'
 Plug 'puremourning/vimspector', {'do': './install_gadget.py --enable-c --enable-python --enable-go'}
 Plug 'mzlogin/vim-markdown-toc'
 Plug 'dhruvasagar/vim-table-mode'
@@ -324,13 +323,25 @@ Plug 'easymotion/vim-easymotion'
 Plug 'mg979/vim-xtabline'
 Plug 'junegunn/goyo.vim'
 Plug 'mhinz/vim-signify'
+Plug 'Shougo/echodoc.vim'
+Plug 'tpope/vim-endwise'
+Plug 'sheerun/vim-polyglot'
+" themes
+Plug 'joshdick/onedark.vim'
+Plug 'arcticicestudio/nord-vim'
+Plug 'dracula/vim', { 'as': 'dracula' }
+Plug 'connorholyday/vim-snazzy'
 " keep on last position
 Plug 'ryanoasis/vim-devicons'
 
 call plug#end()
 
 " vim colorscheme
-colorscheme dracula
+colorscheme onedark
+"onedark
+let g:onedark_terminal_italics = 1
+
+" nord
 " let g:nord_italic = 1
 " let g:nord_italic_comments = 1
 " let g:nord_underline = 1
@@ -363,6 +374,7 @@ nnoremap gp :YcmCompleter GetParent<CR>
 nnoremap g; :YcmCompleter GetDoc<CR>
 nnoremap gr :YcmCompleter GoToReferences<CR>
 nnoremap gn :YcmCompleter RefactorRename<SPACE>
+nnoremap /F :YcmCompleter FixIt<CR>
 
 " rainbow
 let g:rainbow_active = 1
@@ -573,7 +585,7 @@ let g:xtabline_settings.enable_mappings = 0
 let g:xtabline_settings.enable_persistance = 0
 let g:xtabline_settings.last_open_first = 1
 let g:xtabline_settings.tabline_modes = ['tabs', 'buffers']
-autocmd vimenter * :XTabTheme dracula
+autocmd vimenter * :XTabTheme tomorrow
 let g:xtabline_settings.indicators = {
   \ 'modified': '[+]',
   \ 'pinned': '[📌]',
@@ -601,6 +613,9 @@ let g:xtabline_settings.icons = {
 nnoremap <LEADER>gy :Goyo<CR>
 let g:goyo_width = '70'
 let g:goyo_height = '80%'
+
+" echodoc
+let g:echodoc_enable_at_startup = 1
 
 unmap <TAB>
 
