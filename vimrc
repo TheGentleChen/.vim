@@ -64,6 +64,7 @@ set formatoptions=q
 set laststatus=2
 " set working directory to the current file
 set updatetime=100
+set updatecount=100
 set autochdir
 set nolangremap
 set indentexpr=
@@ -83,7 +84,6 @@ set t_Co=256
 set conceallevel=3
 " swap file
 set directory=$HOME/.cache/vim/swap
-set updatecount=100
 " file backup
 set backup
 set backupext=.bak
@@ -140,7 +140,7 @@ noremap <LEADER>T :set splitbelow<CR>:term<CR>
 " cute font
 noremap <LEADER>fr :r !figlet<SPACE>
 " lazygit
-noremap <LEADER>g :terminal lazygit<CR>
+noremap <LEADER>gi :terminal lazygit<CR>
 " oldfile
 " noremap <LEADER>o :browse oldfile<CR>
 " go to next buffer
@@ -196,7 +196,9 @@ noremap <C-l> $
 " noremap <C-q> :qall<CR>
 " save all buffers
 " noremap <C-w> :wall<CR>
-noremap <C-u> <C-i>
+" <C-u> go to older position, <C-o> go to newer position
+noremap <C-o> <C-i>
+noremap <C-u> <C-o>
 " use sys-clipboard in normal mode
 nnoremap <C-y> "+yy
 nnoremap <C-p> o<Esc>"+p
