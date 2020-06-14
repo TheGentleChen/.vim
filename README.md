@@ -1,3 +1,5 @@
-# .vim
+<div align="center">
+    <h1>Rainbow Vimrc</h1>
+</div>
 
-My vim config
+![Screenshot](./screenshot.png)
