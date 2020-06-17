@@ -215,9 +215,6 @@ cnoremap <C-e> <End>
 cnoremap <C-j> <Left>
 cnoremap <C-l> <Right>
 
-" save file as sudo
-cnoremap w!! execute 'silent! write !sudo tee % >/dev/null' <bar> edit!
-
 " insert mode movement inner current line
 inoremap <C-j> <Esc>I
 inoremap <C-l> <Esc>A
@@ -333,6 +330,7 @@ Plug 'joshdick/onedark.vim'
 Plug 'arcticicestudio/nord-vim'
 Plug 'dracula/vim', { 'as': 'dracula' }
 Plug 'connorholyday/vim-snazzy'
+Plug 'lambdalisue/suda.vim'
 " keep on last position
 Plug 'ryanoasis/vim-devicons'
 
@@ -618,6 +616,10 @@ let g:goyo_height = '80%'
 
 " echodoc
 let g:echodoc_enable_at_startup = 1
+
+" suda.vim
+nnoremap <LEADER>S :w suda://%<CR>
+let g:suda#prompt = '(. > .) passwrod please: '
 
 unmap <TAB>
 
