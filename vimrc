@@ -151,6 +151,9 @@ noremap <LEADER>bp :bprevious<CR>
 noremap <LEADER>bb <C-^>
 " delete current buffer
 noremap <LEADER>bd :bdelete<CR>
+" alter the keymap between colemak with normal us keyboard
+noremap <LEADER>bc :source $HOME/.vim/insert-colemak.vim
+noremap <LEADER>bu :source $HOME/.vim/insert-normal.vim<CR>
 " plus 1 to value in current location
 noremap <LEADER>. <C-a>
 " minus 1 to value in current location
@@ -172,8 +175,7 @@ noremap m i
 noremap M I
 " mark
 noremap h m
-noremap H :marks<CR>
-" move
+" movement
 noremap j h
 noremap J b
 noremap k j
@@ -181,6 +183,9 @@ noremap K 5j
 noremap i k
 noremap I 5k
 noremap L w
+" visual movement
+noremap gk gj
+noremap gi gk
 " s for substitute
 nnoremap ss r
 
@@ -283,7 +288,7 @@ func! CompileRun()
 	    exec "terminal ns %"
 	    exec "resize -10"
 	elseif &filetype == 'html'
-	    silent! exec "!".g:mkdp_browser." % &"
+	    exec "google-chrome-stable %"
 	elseif &filetype == 'markdown'
 	    exec "MarkdownPreview"
 	endif
@@ -611,7 +616,7 @@ let g:xtabline_settings.icons = {
 
 " Goyo
 nnoremap <LEADER>gy :Goyo<CR>
-let g:goyo_width = '70'
+let g:goyo_width = '80'
 let g:goyo_height = '80%'
 
 " echodoc
@@ -623,8 +628,7 @@ let g:suda#prompt = '(. > .) passwrod please: '
 
 unmap <TAB>
 
-" for man, just type ':Map echo' for test
-exec "runtime! ftplugin/man.vim"
 exec "nohlsearch"
 
 " source $HOME/.vim/insert-colemak.vim
+" source $HOME/.vim/insert-normal.vim
