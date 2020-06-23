@@ -43,7 +43,6 @@ set timeoutlen=1500
 " for keycode timeout
 set ttimeout
 set ttimeoutlen=10
-set pastetoggle=<F10>
 set hlsearch
 set incsearch
 set ignorecase
@@ -152,7 +151,7 @@ noremap <LEADER>bb <C-^>
 " delete current buffer
 noremap <LEADER>bd :bdelete<CR>
 " alter the keymap between colemak with normal us keyboard
-noremap <LEADER>bc :source $HOME/.vim/insert-colemak.vim
+noremap <LEADER>bc :source $HOME/.vim/insert-colemak.vim<CR>
 noremap <LEADER>bu :source $HOME/.vim/insert-normal.vim<CR>
 " plus 1 to value in current location
 noremap <LEADER>. <C-a>
@@ -259,38 +258,19 @@ nnoremap sh <C-w>K
 nnoremap sr <C-w>r
 nnoremap sR <C-w>R
 
-noremap r :call CompileRun()<CR>
+" compile and run (file scope or project scope)
+noremap <F6> :AsyncTask file-build<CR>
+noremap <F7> :call FileRun()<CR>
+noremap <LEADER><F6> :AsyncTask project-build<CR>
+noremap <LEADER><F7> :AsyncTask project-run<CR>
 " Compile function
-func! CompileRun()
+func! FileRun()
 	exec "w"
-	if &filetype == 'c'
-	    set splitbelow
-	    exec "!gcc -std=c11 -Wall % -o %<"
-	    exec "terminal ./%<"
-	    exec "resize -10"
-	elseif &filetype == 'cpp'
-	    set splitbelow
-	    exec "!g++ -std=c++2a -Wall % -o %<"
-	    exec "terminal ./%<"
-	    exec "resize -10"
-	elseif &filetype == 'java'
-	    set splitbelow
-	    exec "!javac %"
-	    exec "!java %<"
-	    elseif &filetype == 'sh'
-	    :!bash %
-	elseif &filetype == 'python'
-	    set splitbelow
-	    exec "terminal python3 %"
-	    exec "resize -10"
-	elseif &filetype == 'tcl'
-	    set splitbelow
-	    exec "terminal ns %"
-	    exec "resize -10"
-	elseif &filetype == 'html'
-	    exec "google-chrome-stable %"
-	elseif &filetype == 'markdown'
+	if &filetype == 'markdown'
 	    exec "MarkdownPreview"
+	else
+	    set splitbelow
+	    exec "AsyncTask file-run"
 	endif
 endfunc
 
@@ -330,12 +310,14 @@ Plug 'mhinz/vim-signify'
 Plug 'Shougo/echodoc.vim'
 Plug 'tpope/vim-endwise'
 Plug 'sheerun/vim-polyglot'
+Plug 'lambdalisue/suda.vim'
+Plug 'skywind3000/asynctasks.vim'
+Plug 'skywind3000/asyncrun.vim'
 " themes
 Plug 'joshdick/onedark.vim'
 Plug 'arcticicestudio/nord-vim'
 Plug 'dracula/vim', { 'as': 'dracula' }
 Plug 'connorholyday/vim-snazzy'
-Plug 'lambdalisue/suda.vim'
 " keep on last position
 Plug 'ryanoasis/vim-devicons'
 
@@ -493,8 +475,14 @@ let g:NERDTreeHijackNetrw = 0
 let g:ranger_replace_netrw = 1
 
 " vimspector
-let g:vimspector_enable_mappings = 'HUMAN'
-nnoremap <F2> :VimspectorReset<CR>
+nnoremap <F3> :VimspectorReset<CR>
+nnoremap <F4> :call vimspector#Restart()<CR>
+nnoremap <F5> :call vimspector#Continue()<CR>
+nnoremap <F8> :call vimspector#AddFunctionBreakpoint('<cexpr>')<CR>
+nnoremap <F9> :call vimspector#ToggleBreakpoint()<CR>
+nnoremap <F10> :call vimspector#StepOver()<CR>
+nnoremap <F11> :call vimspector#StepInto()<CR>
+nnoremap <F12> :call vimspector#StepOut()<CR>
 function! s:read_template_into_buffer(template)
 	" has to be a function to avoid the extra space fzf#run insers otherwise
 	execute '0r ~/.vim/vimspector_json_templation/'.a:template
@@ -625,6 +613,10 @@ let g:echodoc_enable_at_startup = 1
 " suda.vim
 nnoremap <LEADER>S :w suda://%<CR>
 let g:suda#prompt = '(. > .) passwrod please: '
+
+" asynctasks.vim
+let g:asyncrun_open = 6
+let g:asyncrun_rootmarks = ['.git', '.svn', '.root', '.project', '.hg']
 
 unmap <TAB>
 
