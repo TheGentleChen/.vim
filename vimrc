@@ -185,21 +185,15 @@ noremap L w
 " visual movement
 noremap gk gj
 noremap gi gk
-" s for substitute
-nnoremap ss r
 
 " move current line up
-noremap <C-i> :<c-u>execute 'move -1-'. v:count1<cr>
+noremap <C-i> :<c-u>execute 'move -1-'. v:count1<CR>
 " move current line down
-noremap <C-k> :<c-u>execute 'move +'. v:count1<cr>
+noremap <C-k> :<c-u>execute 'move +'. v:count1<CR>
 " move cusor to head of current line
 noremap <C-j> 0
 " move cusor to end of current line
 noremap <C-l> $
-" quit all buffers
-" noremap <C-q> :qall<CR>
-" save all buffers
-" noremap <C-w> :wall<CR>
 " <C-u> go to older position, <C-o> go to newer position
 noremap <C-o> <C-i>
 noremap <C-u> <C-o>
@@ -462,7 +456,6 @@ noremap <LEADER>fM :Maps<CR>
 " ultisnips
 let g:UltiSnipsExpandTrigger="<C-d>"
 let g:UltiSnipsJumpForwardTrigger="<C-d>"
-let g:UltiSnipsListSnippets = "<C-w>"
 let g:UltiSnipsJumpBackwardTrigger="<C-a>"
 let g:UltiSnipsSnippetDirectories = [$HOME.'/.vim/Ultisnips/', $HOME.'/.vim/plugged/vim-snippets/UltiSnips/']
 let g:UltiSnipsEditSplit="horizontal"
