@@ -1,22 +1,25 @@
-" ==     __  ____   ____     _____ __  __ ____   ____
-" ==    |  \/  \ \ / /\ \   / /_ _|  \/  |  _ \ / ___|
-" ==    | |\/| |\ V /  \ \ / / | || |\/| | |_) | |
-" ==    | |  | | | |    \ V /  | || |  | |  _ <| |___
-" ==    |_|  |_| |_|     \_/  |___|_|  |_|_| \_\\____|
-" ==
-" ==            Originated by Rainbow Chen
+"##     __  ____   ____     _____ __  __ ____   ____
+"##    |  \/  \ \ / /\ \   / /_ _|  \/  |  _ \ / ___|
+"##    | |\/| |\ V /  \ \ / / | || |\/| | |_) | |
+"##    | |  | | | |    \ V /  | || |  | |  _ <| |___
+"##    |_|  |_| |_|     \_/  |___|_|  |_|_| \_\\____|
+"##
+"##           * Originated by Rainbow Chen *
 
 " Auto load plugs for the first time uses
 if empty(glob('~/.vim/autoload/plug.vim'))
-  silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
+    silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
     \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-
-  autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
+    autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
 endif
 
 " file path of swap, backup, undo files
 if !isdirectory($HOME.'/.cache/vim')
     call mkdir($HOME.'/.cache/vim')
+    call mkdir($HOME.'/.cache/vim/swap')
+    call mkdir($HOME.'/.cache/vim/backup')
+    call mkdir($HOME.'/.cache/vim/undo')
+    call mkdir($HOME.'/.cache/vim/vimtex')
 endif
 
 " nocompatible mode
@@ -307,6 +310,8 @@ Plug 'sheerun/vim-polyglot'
 Plug 'lambdalisue/suda.vim'
 Plug 'skywind3000/asynctasks.vim'
 Plug 'skywind3000/asyncrun.vim'
+Plug 'lervag/vimtex', { 'for': 'tex' }
+
 " themes
 Plug 'joshdick/onedark.vim'
 Plug 'arcticicestudio/nord-vim'
@@ -610,6 +615,11 @@ let g:suda#prompt = '(. > .) passwrod please: '
 " asynctasks.vim
 let g:asyncrun_open = 6
 let g:asyncrun_rootmarks = ['.git', '.svn', '.root', '.project', '.hg']
+
+" vimtex
+let g:vimtex_mappings_enabled = 0
+let g:vimtex_cache_root = '~/.cache/vim/vimtex'
+let g:vimtex_view_method = 'zathura'
 
 unmap <TAB>
 
