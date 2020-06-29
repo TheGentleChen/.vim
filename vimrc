@@ -508,7 +508,8 @@ noremap <LEADER>tm :TableModeToggle<CR>
 let g:table_mode_relign_map = '<LEADER>tr'
 
 " vim-easy-align
-noremap ga <Plug>(EasyAlign)
+nmap ga <Plug>(EasyAlign)
+xmap ga <Plug>(EasyAlign)
 
 " vista
 noremap T :Vista!!<CR>
@@ -610,7 +611,7 @@ let g:echodoc_enable_at_startup = 1
 
 " suda.vim
 nnoremap <LEADER>S :w suda://%<CR>
-let g:suda#prompt = '(. > .) passwrod please: '
+let g:suda#prompt = '(. > .) password please: '
 
 " asynctasks.vim
 let g:asyncrun_open = 6
