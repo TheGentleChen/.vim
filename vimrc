@@ -13,7 +13,7 @@ if empty(glob('~/.vim/autoload/plug.vim'))
     autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
 endif
 
-" file path of swap, backup, undo files
+" file path of swap, backup, undo files and vimtex plugin
 if !isdirectory($HOME.'/.cache/vim')
     call mkdir($HOME.'/.cache/vim')
     call mkdir($HOME.'/.cache/vim/swap')
