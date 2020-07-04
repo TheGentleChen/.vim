@@ -1,10 +1,11 @@
-"##     __  ____   ____     _____ __  __ ____   ____
-"##    |  \/  \ \ / /\ \   / /_ _|  \/  |  _ \ / ___|
-"##    | |\/| |\ V /  \ \ / / | || |\/| | |_) | |
-"##    | |  | | | |    \ V /  | || |  | |  _ <| |___
-"##    |_|  |_| |_|     \_/  |___|_|  |_|_| \_\\____|
-"##
-"##           * Originated by Rainbow Chen *
+" __  __     __     ___
+"|  \/  |_   \ \   / (_)_ __ ___  _ __ ___
+"| |\/| | | | \ \ / /| | '_ ` _ \| '__/ __|
+"| |  | | |_| |\ V / | | | | | | | | | (__
+"|_|  |_|\__, | \_/  |_|_| |_| |_|_|  \___|
+"        |___/
+"
+"      * Originated by Rainbow Chen *
 
 " Auto load plugs for the first time uses
 if empty(glob('~/.vim/autoload/plug.vim'))
@@ -113,9 +114,6 @@ autocmd BufReadPost * if line("'\"") >= 1 && line("'\"") <= line("$") && &ft !~#
 " automatically deletes all trailing whitespace and newlines at end of file on save
 autocmd BufWritePre * %s/\s\+$//e
 autocmd BufWritePre * %s/\n\+\%$//e
-
-" diff current file with backup file
-command DiffOrig vert new | set bt=nofile | r ++edit # | 0d_ | diffthis | wincmd p | diffthis
 
 " leader map
 let g:mapleader=" "
@@ -304,9 +302,7 @@ Plug 'easymotion/vim-easymotion'
 Plug 'mg979/vim-xtabline'
 Plug 'junegunn/goyo.vim'
 Plug 'mhinz/vim-signify'
-Plug 'Shougo/echodoc.vim'
 Plug 'tpope/vim-endwise'
-Plug 'sheerun/vim-polyglot'
 Plug 'lambdalisue/suda.vim'
 Plug 'skywind3000/asynctasks.vim'
 Plug 'skywind3000/asyncrun.vim'
@@ -606,9 +602,6 @@ nnoremap <LEADER>gy :Goyo<CR>
 let g:goyo_width = '80'
 let g:goyo_height = '80%'
 
-" echodoc
-let g:echodoc_enable_at_startup = 1
-
 " suda.vim
 nnoremap <LEADER>S :w suda://%<CR>
 let g:suda#prompt = '(. > .) password please: '
@@ -625,6 +618,3 @@ let g:vimtex_view_method = 'zathura'
 unmap <TAB>
 
 exec "nohlsearch"
-
-" source $HOME/.vim/insert-colemak.vim
-" source $HOME/.vim/insert-normal.vim
