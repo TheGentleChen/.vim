@@ -272,7 +272,6 @@ endfunc
 call plug#begin('~/.vim/plugged')
 
 Plug 'vim-airline/vim-airline'
-Plug 'vim-airline/vim-airline-themes'
 Plug 'ycm-core/YouCompleteMe', { 'do': './install.py --clangd-completer' }
 Plug 'tpope/vim-surround'
 Plug 'luochen1990/rainbow'
